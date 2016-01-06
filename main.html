@@ -1,0 +1,68 @@
+<html>
+<head></head>
+<body>
+
+	<table>
+		<tr>
+			<div id="weekRange"></div>
+			<button id="previousWeekButton" onclick="loadPreviousWeek()">Previous Week</button>
+			<button id="nextWeekButton" onclick="loadNextWeek()">Next Week</button>
+		</tr>
+		<tr>
+			<td></td>
+			<td>Time In</td>
+			<td>Time Out</td>
+			<td>Break Length</td>
+		</tr>
+		<tr>
+			<td>Sunday</td>
+			<td><input type="text" id="sunday_in" form="week_form"></td>
+	        <td><input type="text" id="sunday_out" form="week_form"></td>
+	        <td><input type="text" id="sunday_break" form="week_form"></td>
+		</tr>
+		<tr>
+			<td>Monday</td>
+			<td><input type="text" id="monday_in" form="week_form"></td>
+	        <td><input type="text" id="monday_out" form="week_form"></td>
+	        <td><input type="text" id="monday_break" form="week_form"></td>
+		</tr>
+		<tr>
+			<td>Tuesday</td>
+			<td><input type="text" id="tuesday_in" form="week_form"></td>
+	        <td><input type="text" id="tuesday_out" form="week_form"></td>
+	        <td><input type="text" id="tuesday_break" form="week_form"></td>
+		</tr>
+		<tr>
+			<td>Wednesday</td>
+			<td><input type="text" id="wednesday_in" form="week_form"></td>
+	        <td><input type="text" id="wednesday_out" form="week_form"></td>
+	        <td><input type="text" id="wednesday_break" form="week_form"></td>
+		</tr>
+		<tr>
+			<td>Thursday</td>
+			<td><input type="text" id="thursday_in" form="week_form"></td>
+	        <td><input type="text" id="thursday_out" form="week_form"></td>
+	        <td><input type="text" id="thursday_break" form="week_form"></td>
+		</tr>
+		<tr>
+			<td>Friday</td>
+			<td><input type="text" id="friday_in" form="week_form"></td>
+	        <td><input type="text" id="friday_out" form="week_form"></td>
+	        <td><input type="text" id="friday_break" form="week_form"></td>
+		</tr>
+		<tr>
+			<td>Saturday</td>
+			<td><input type="text" id="saturday_in" form="week_form"></td>
+	        <td><input type="text" id="saturday_out" form="week_form"></td>
+	        <td><input type="text" id="saturday_break" form="week_form"></td>
+		</tr>
+		<tr>
+			<div id="weekTotal"></div>
+		</tr>
+	</table>
+
+	<button id="saveWeek" onclick="saveWeek()">Save</button>
+
+	<script src="main.js"></script>
+</body>
+</html>
