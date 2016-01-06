@@ -1,9 +1,11 @@
-(function onLoad(){
-	var weekRange = ISORangetoDate(weekCodes[0]);
-	document.getElementById('weekRange').innerHTML = weekRange;
-	disableButton("previousWeekButton");
-	populateTable();
-})();
+Array.prototype.include = function(element){
+	for (var i = 0; i < this.length; i++){
+		if (this[i] == element){
+			return true;
+		}
+	}
+	return false;
+}
 
 function weekISOcodes(){
 	var weekStartCodes = [];
@@ -46,14 +48,6 @@ function weekISOcodes(){
 	return weekStartCodes;
 }
 
-Array.prototype.include = function(element){
-	for (var i = 0; i < this.length; i++){
-		if (this[i] == element){
-			return true;
-		}
-	}
-	return false;
-}
 
 var weekCodes = weekISOcodes();
 var weeks = [];
@@ -61,10 +55,16 @@ var currentWeekIndex = 0;
 weekCodes.forEach(function(code){
 	weeks.push(new Week(code));
 });
+var weekRange = ISORangetoDate(weekCodes[0]);
+document.getElementById('weekRange').innerHTML = weekRange;
+disableButton("previousWeekButton");
+var days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+populateTable();
+
 
 function Week(){}
 
-var days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+
 
 function Day(beginDay, finishDay, breakTime){
 	this.beginDay = Number(beginDay);
