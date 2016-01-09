@@ -11,23 +11,19 @@ document.getElementById('weekRange').innerHTML = weekRange;
 var days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
 
 var nextWeekButton = document.getElementById("nextWeekButton");
-nextWeekButton.onclick = function(){
-	loadNextWeek();
-}
-
 var previousWeekButton = document.getElementById("previousWeekButton");
-previousWeekButton.onclick = function(){
-	loadPreviousWeek();
-}
-
 var saveWeekButton = document.getElementById("saveWeek");
-saveWeekButton.onclick = function(){
-	saveWeek();
-}
+
+setOnClickHandler(nextWeekButton, "nextWeekButton", loadNextWeek)
+setOnClickHandler(previousWeekButton, "previousWeekButton", loadPreviousWeek)
+setOnClickHandler(saveWeekButton, "saveWeekButton", saveWeek)
 
 disableButton("previousWeekButton");
 populateTable();
 
+function setOnClickHandler(button, id, f){
+	button.onclick = function(){f();};
+}
 
 function weekISOcodes(){
 	var weekStartCodes = [];
