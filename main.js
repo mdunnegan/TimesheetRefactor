@@ -7,6 +7,37 @@ Array.prototype.include = function(element){
 	return false;
 }
 
+var weekCodes = weekISOcodes();
+var weeks = [];
+var currentWeekIndex = 0;
+weekCodes.forEach(function(code){
+	weeks.push(new Week(code));
+});
+
+var weekRange = ISORangetoDate(weekCodes[0]);
+document.getElementById('weekRange').innerHTML = weekRange;
+
+var days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+
+var nextWeekButton = document.getElementById("nextWeekButton");
+nextWeekButton.onclick = function(){
+	loadNextWeek();
+}
+
+var previousWeekButton = document.getElementById("previousWeekButton");
+previousWeekButton.onclick = function(){
+	loadPreviousWeek();
+}
+
+var saveWeekButton = document.getElementById("saveWeek");
+saveWeekButton.onclick = function(){
+	saveWeek();
+}
+
+disableButton("previousWeekButton");
+populateTable();
+
+
 function weekISOcodes(){
 	var weekStartCodes = [];
 	var startDate = "20160103"; // First sunday of 2016
@@ -48,22 +79,14 @@ function weekISOcodes(){
 	return weekStartCodes;
 }
 
-
-var weekCodes = weekISOcodes();
-var weeks = [];
-var currentWeekIndex = 0;
-weekCodes.forEach(function(code){
-	weeks.push(new Week(code));
-});
-var weekRange = ISORangetoDate(weekCodes[0]);
-document.getElementById('weekRange').innerHTML = weekRange;
-disableButton("previousWeekButton");
-var days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
-populateTable();
+// MAIN
 
 
-function Week(){}
 
+
+function Week(isoCode){
+	this.isoCode = isoCode;
+}
 
 
 function Day(beginDay, finishDay, breakTime){
@@ -123,8 +146,6 @@ function enableButton(buttonId){
 function populateTable(){
 	// display hours for current week 
 	var thisWeek = weeks[currentWeekIndex];
-
-
 	days.forEach(function(day, index){
 		day = day.toLowerCase();
 
@@ -186,6 +207,4 @@ function ISORangetoDate(iso){
 	// Eventually going to make the dates look nicer. Not a priority. Give it to the intern. 
 	return iso;
 }
-
-
 
