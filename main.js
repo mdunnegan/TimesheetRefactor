@@ -1,12 +1,3 @@
-Array.prototype.include = function(element){
-	for (var i = 0; i < this.length; i++){
-		if (this[i] == element){
-			return true;
-		}
-	}
-	return false;
-}
-
 var weekCodes = weekISOcodes();
 var weeks = [];
 var currentWeekIndex = 0;
@@ -57,11 +48,11 @@ function weekISOcodes(){
 	var carryover = Number(startDate.slice(-1))
 	for (var i = 1; i <= 12; i++){
 		var numDays = 0;
-		if (monthsWith31Days.include(i)){
+		if (monthsWith31Days.indexOf(i) > -1){
 			numDays = 31;
-		} else if (monthsWith30Days.include(i)){
+		} else if (monthsWith30Days.indexOf(i) > -1){
 			numDays = 30;
-		} else if (monthsWith29Days.include(i)){
+		} else if (monthsWith29Days.indexOf(i) > -1){
 			numDays = 29;
 		} else {
 			numDays = 28;
@@ -78,11 +69,6 @@ function weekISOcodes(){
 	}
 	return weekStartCodes;
 }
-
-// MAIN
-
-
-
 
 function Week(isoCode){
 	this.isoCode = isoCode;
