@@ -1,4 +1,4 @@
-// I want to make this more like a main method! Not global stuff
+// Eventually, this should mimic a main method.
 
 var weekCodes = weekISOcodes();
 var weeks = [];
@@ -16,16 +16,20 @@ var nextWeekButton = document.getElementById("nextWeekButton");
 var previousWeekButton = document.getElementById("previousWeekButton");
 var saveWeekButton = document.getElementById("saveWeek");
 
-setOnClickHandler(nextWeekButton, "nextWeekButton", loadNextWeek)
-setOnClickHandler(previousWeekButton, "previousWeekButton", loadPreviousWeek)
-setOnClickHandler(saveWeekButton, "saveWeekButton", saveWeek)
+nextWeekButton.addEventListener("click", function(){
+	loadNextWeek();
+}, false);
+previousWeekButton.addEventListener("click", function(){
+	loadPreviousWeek();
+}, false);
+saveWeekButton.addEventListener("click", function(){
+	saveWeek();
+}, false);
 
 document.getElementById("previousWeekButton").disabled = true;
 populateTable();
 
-function setOnClickHandler(button, id, f){
-	button.onclick = function(){f();};
-}
+// End 'main'
 
 function weekISOcodes(){
 	var weekStartCodes = [];
@@ -71,7 +75,6 @@ function weekISOcodes(){
 function Week(isoCode){
 	this.isoCode = isoCode;
 }
-
 
 function Day(beginDay, finishDay, breakTime){
 	this.beginDay = Number(beginDay);
@@ -119,8 +122,8 @@ function loadPreviousWeek(){
 }
 
 function updateWeekHeader(range){
-	var isoRange = ISORangetoDate(range);
-	document.getElementById('weekRange').innerHTML = isoRange;
+	var weekHeader = ISORangetoDate(range);
+	document.getElementById('weekRange').innerHTML = weekHeader;
 }
 
 function ISORangetoDate(iso){
@@ -142,6 +145,7 @@ function populateTable(){
 		document.getElementById(day + "_out").value = thisWeek[days[index]].finishDay,
 		document.getElementById(day + "_break").value = thisWeek[days[index]].breakTime
 	});
+
 	displayWeekTotal();
 }
 
@@ -171,7 +175,6 @@ function saveWeek(){
 	});
 
 	displayWeekTotal();
-
 }
 
 function displayWeekTotal(){
@@ -185,7 +188,4 @@ function displayWeekTotal(){
 		}
 	});
 	document.getElementById('weekTotal').innerHTML = "Week total is: " + weekTotal + " hours";
-
 }
-
-
