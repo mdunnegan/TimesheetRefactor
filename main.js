@@ -1,3 +1,5 @@
+// I want to make this more like a main method! Not global stuff
+
 var weekCodes = weekISOcodes();
 var weeks = [];
 var currentWeekIndex = 0;
@@ -18,7 +20,7 @@ setOnClickHandler(nextWeekButton, "nextWeekButton", loadNextWeek)
 setOnClickHandler(previousWeekButton, "previousWeekButton", loadPreviousWeek)
 setOnClickHandler(saveWeekButton, "saveWeekButton", saveWeek)
 
-disableButton("previousWeekButton");
+document.getElementById("previousWeekButton").disabled = true;
 populateTable();
 
 function setOnClickHandler(button, id, f){
@@ -90,39 +92,40 @@ Day.prototype = {
 	}
 };
 
-// Gets called when the user presses next week
 function loadNextWeek(){
-	currentWeekIndex++;
-	displayWeek(weekCodes[currentWeekIndex]);
-	populateTable();
-	if (currentWeekIndex == 51){
-		disableButton("nextWeekButton");
-	}
-	enableButton("previousWeekButton");
-}
-
-// Gets called when the user presses previous week
-function loadPreviousWeek(){
-	currentWeekIndex--;
-	displayWeek(weekCodes[currentWeekIndex]);
-	populateTable();
 	if (currentWeekIndex == 0){
-		disableButton("previousWeekButton");
+		document.getElementById("previousWeekButton").disabled = false;
 	}
-	enableButton("nextWeekButton");
+	currentWeekIndex++;
+	if (currentWeekIndex == 51){
+		document.getElementById("nextWeekButton").disabled = true;
+	}
+
+	updateWeekHeader(weekCodes[currentWeekIndex]);
+	populateTable();
 }
 
-function displayWeek(range){
+function loadPreviousWeek(){
+	if (currentWeekIndex == 51){
+		document.getElementById("nextWeekButton").disabled = false;
+	}
+	currentWeekIndex--;
+	if (currentWeekIndex == 0){
+		document.getElementById("previousWeekButton").disabled = true;
+	}
+	
+	updateWeekHeader(weekCodes[currentWeekIndex]);
+	populateTable();
+}
+
+function updateWeekHeader(range){
 	var isoRange = ISORangetoDate(range);
 	document.getElementById('weekRange').innerHTML = isoRange;
 }
 
-function disableButton(buttonId){
-	document.getElementById(buttonId).disabled = true;
-}
-
-function enableButton(buttonId){
-	document.getElementById(buttonId).disabled = false;
+function ISORangetoDate(iso){
+	// Eventually going to make the dates look nicer. Not a priority. Give it to the intern. 
+	return iso;
 }
 
 function populateTable(){
@@ -185,8 +188,4 @@ function displayWeekTotal(){
 
 }
 
-function ISORangetoDate(iso){
-	// Eventually going to make the dates look nicer. Not a priority. Give it to the intern. 
-	return iso;
-}
 
