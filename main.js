@@ -1,35 +1,71 @@
-// Eventually, this should mimic a main method.
-
 var weekCodes = weekISOcodes();
 var weeks = [];
 var currentWeekIndex = 0;
-weekCodes.forEach(function(code){
-	weeks.push(new Week(code));
-});
 
-var weekRange = ISORangetoDate(weekCodes[0]);
-document.getElementById('weekRange').innerHTML = weekRange;
+Week.prototype = {
+	constructor: Week
+}
 
-var days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+Day.prototype = {
+	constructor: Day,
+	totalHours: function(){
+		return this.finishDay - this.beginDay - this.breakTime;
+	},
 
-var nextWeekButton = document.getElementById("nextWeekButton");
-var previousWeekButton = document.getElementById("previousWeekButton");
-var saveWeekButton = document.getElementById("saveWeek");
+	updateHours: function(beginDay, finishDay, breakTime){
+		this.beginDay = beginDay;
+		this.finishDay = finishDay;
+		this.breakTime = breakTime;
+	}
+};
 
-nextWeekButton.addEventListener("click", function(){
-	loadNextWeek();
-}, false);
-previousWeekButton.addEventListener("click", function(){
-	loadPreviousWeek();
-}, false);
-saveWeekButton.addEventListener("click", function(){
-	saveWeek();
-}, false);
+function Main(){
+	
+	weekCodes.forEach(function(code){
+		weeks.push(new Week(code));
+	});
 
-document.getElementById("previousWeekButton").disabled = true;
-populateTable();
+	var weekRange = ISORangetoDate(weekCodes[0]);
+	document.getElementById('weekRange').innerHTML = weekRange;
 
-// End 'main'
+	var nextWeekButton = document.getElementById("nextWeekButton");
+	var previousWeekButton = document.getElementById("previousWeekButton");
+	var saveWeekButton = document.getElementById("saveWeek");
+
+	nextWeekButton.addEventListener("click", function(){
+		loadNextWeek();
+	}, false);
+	previousWeekButton.addEventListener("click", function(){
+		loadPreviousWeek();
+	}, false);
+	saveWeekButton.addEventListener("click", function(){
+		saveWeek();
+	}, false);
+
+	document.getElementById("previousWeekButton").disabled = true;
+	displayHours();
+}
+
+Main();
+
+function Week(isoCode){
+	this.sunday = new Day("sunday",0,0,0); // somehow these days are not getting the right prototype
+	this.monday = new Day("monday",0,0,0);
+	this.tuesday = new Day("tuesday",0,0,0);
+	this.wednesday = new Day("wednesday",0,0,0);
+	this.thursday = new Day("thursday",0,0,0);
+	this.friday = new Day("friday",0,0,0);
+	this.saturday = new Day("saturday",0,0,0);
+	this.days = [this.sunday, this.monday, this.tuesday, this.wednesday, this.thursday, this.friday, this.saturday]
+	this.isoCode = isoCode;
+}
+
+function Day(name, beginDay, finishDay, breakTime){
+	this.name = name;
+	this.beginDay = beginDay;
+	this.finishDay = finishDay;
+	this.breakTime = breakTime;
+}
 
 function weekISOcodes(){
 	var weekStartCodes = [];
@@ -72,29 +108,6 @@ function weekISOcodes(){
 	return weekStartCodes;
 }
 
-function Week(isoCode){
-	this.isoCode = isoCode;
-}
-
-function Day(beginDay, finishDay, breakTime){
-	this.beginDay = Number(beginDay);
-	this.finishDay = Number(finishDay);
-	this.breakTime = Number(breakTime);
-}
-
-Day.prototype = {
-	constructor: Day,
-	totalHours: function(){
-		return this.finishDay - this.beginDay - this.breakTime;
-	},
-
-	updateHours: function(beginDay, finishDay, breakTime){
-		this.beginDay = beginDay;
-		this.finishDay = finishDay;
-		this.breakTime = breakTime;
-	}
-};
-
 function loadNextWeek(){
 	if (currentWeekIndex == 0){
 		document.getElementById("previousWeekButton").disabled = false;
@@ -105,7 +118,7 @@ function loadNextWeek(){
 	}
 
 	updateWeekHeader(weekCodes[currentWeekIndex]);
-	populateTable();
+	displayHours();
 }
 
 function loadPreviousWeek(){
@@ -118,7 +131,7 @@ function loadPreviousWeek(){
 	}
 	
 	updateWeekHeader(weekCodes[currentWeekIndex]);
-	populateTable();
+	displayHours();
 }
 
 function updateWeekHeader(range){
@@ -127,23 +140,17 @@ function updateWeekHeader(range){
 }
 
 function ISORangetoDate(iso){
-	// Eventually going to make the dates look nicer. Not a priority. Give it to the intern. 
+	// Eventually going to make the dates look nicer. Not a priority. Give it to the intern.
 	return iso;
 }
 
-function populateTable(){
-	// display hours for current week 
+function displayHours(){
 	var thisWeek = weeks[currentWeekIndex];
-	days.forEach(function(day, index){
-		day = day.toLowerCase();
 
-		if (thisWeek[days[index]] == undefined){
-			thisWeek[days[index]] = new Day(0,0,0);
-		}
-
-		document.getElementById(day + "_in").value = thisWeek[days[index]].beginDay,
-		document.getElementById(day + "_out").value = thisWeek[days[index]].finishDay,
-		document.getElementById(day + "_break").value = thisWeek[days[index]].breakTime
+	thisWeek.days.forEach(function(day){
+		document.getElementById(day.name + "_in").value = thisWeek[day.name].beginDay,
+		document.getElementById(day.name + "_out").value = thisWeek[day.name].finishDay,
+		document.getElementById(day.name + "_break").value = thisWeek[day.name].breakTime
 	});
 
 	displayWeekTotal();
@@ -151,40 +158,36 @@ function populateTable(){
 
 function saveWeek(){
 	if (currentWeekIndex < 0 || currentWeekIndex > 51){
-		// Should never get here because of the button disabling
 		alert("You are out of range!");
 		return;
 	}
 
-	var weekToUpdate = weeks[currentWeekIndex];
+	var thisWeek = weeks[currentWeekIndex];
+	var dayIn, dayOut, dayBreak;
 
-	days.forEach(function(day, index){
-		day = day.toLowerCase();
-
-		var dayIn = document.getElementById(day + "_in").value;
-		var dayOut = document.getElementById(day + "_out").value;
-		var dayBreak = document.getElementById(day + "_break").value;
+	thisWeek.days.forEach(function(day){
+		dayIn = document.getElementById(day.name + "_in").value;
+		dayOut = document.getElementById(day.name + "_out").value;
+		dayBreak = document.getElementById(day.name + "_break").value;
 
 		if (!isNaN(dayIn) && !isNaN(dayOut) && !isNaN(dayBreak)){
-			weekToUpdate[days[index]] = new Day(
-				Number(dayIn),
-				Number(dayOut),
-				Number(dayBreak)
-			);
+			day.updateHours(Number(dayIn), Number(dayOut), Number(dayBreak));
 		}
 	});
-
 	displayWeekTotal();
 }
 
 function displayWeekTotal(){
 	var weekTotal = 0;
-	days.forEach(function(day, index){
-		var dayIn = document.getElementById(day + "_in").value;
-		var dayOut = document.getElementById(day + "_out").value;
-		var dayBreak = document.getElementById(day + "_break").value;
+	var thisWeek = weeks[currentWeekIndex];
+
+	thisWeek.days.forEach(function(day){
+		var dayIn = document.getElementById(day.name + "_in").value;
+		var dayOut = document.getElementById(day.name + "_out").value;
+		var dayBreak = document.getElementById(day.name + "_break").value;
+		
 		if (!isNaN(dayIn) && !isNaN(dayOut) && !isNaN(dayBreak)){
-			weekTotal += (dayOut - dayIn - dayBreak);	
+			weekTotal += day.totalHours();	
 		}
 	});
 	document.getElementById('weekTotal').innerHTML = "Week total is: " + weekTotal + " hours";
