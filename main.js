@@ -19,7 +19,7 @@ Day.prototype = {
 	}
 };
 
-function Main(){
+function main(){
 	
 	weekCodes.forEach(function(code){
 		weeks.push(new Week(code));
@@ -46,7 +46,7 @@ function Main(){
 	displayHours();
 }
 
-Main();
+main();
 
 function Week(isoCode){
 	this.sunday = new Day("sunday",0,0,0); // somehow these days are not getting the right prototype
@@ -185,7 +185,7 @@ function displayWeekTotal(){
 		var dayIn = document.getElementById(day.name + "_in").value;
 		var dayOut = document.getElementById(day.name + "_out").value;
 		var dayBreak = document.getElementById(day.name + "_break").value;
-		
+
 		if (!isNaN(dayIn) && !isNaN(dayOut) && !isNaN(dayBreak)){
 			weekTotal += day.totalHours();	
 		}
