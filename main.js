@@ -2,6 +2,10 @@ var weekCodes = weekISOcodes();
 var weeks = [];
 var currentWeekIndex = 0;
 
+function p(arg){
+	console.log(arg)
+}
+
 Week.prototype = {
 	constructor: Week
 }
@@ -25,7 +29,7 @@ function main(){
 		weeks.push(new Week(code));
 	});
 
-	var weekRange = ISORangetoDate(weekCodes[0]);
+	var weekRange = ISORangeToDate(weekCodes[0]);
 	document.getElementById('weekRange').innerHTML = weekRange;
 
 	var nextWeekButton = document.getElementById("nextWeekButton");
@@ -135,13 +139,21 @@ function loadPreviousWeek(){
 }
 
 function updateWeekHeader(range){
-	var weekHeader = ISORangetoDate(range);
+	var weekHeader = ISORangeToDate(range);
 	document.getElementById('weekRange').innerHTML = weekHeader;
 }
 
-function ISORangetoDate(iso){
-	// Eventually going to make the dates look nicer. Not a priority. Give it to the intern.
-	return iso;
+function ISORangeToDate(iso_range){
+	var firstDate = ISOToDate(iso_range[0])
+	var secondDate = ISOToDate(iso_range[1])
+	return firstDate + " - " + secondDate;
+}
+
+function ISOToDate(iso){
+	var year = iso.slice(0,4);
+	var month = iso.slice(4,6);
+	var day = iso.slice(6);
+	return month + "/" + day + "/" + year;
 }
 
 function displayHours(){
